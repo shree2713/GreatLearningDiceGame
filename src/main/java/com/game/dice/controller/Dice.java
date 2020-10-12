@@ -22,100 +22,102 @@ public class Dice
 
     private static int count  = 0;
 
-
     public static void main(String[] args)
     {
         Dice diceObject = new Dice();
 
-        int NoOfPlayer = Integer.parseInt(args[0]);
+        int numOfPlayer = Integer.parseInt(args[0]);
         int targetNumber = Integer.parseInt(args[1]);
-        int turn = random.nextInt(NoOfPlayer);
 
-        boolean[] flag = new boolean[NoOfPlayer];
-        String[] players = new String[NoOfPlayer];
+        if (numOfPlayer <= 0 || targetNumber <= 0) {
+            System.out.println(ApplicationConstants.INVALID_ARGUMENTS);
+        } else {
+            String[] playersName = new String[numOfPlayer];
+            boolean[] flagTurn = new boolean[numOfPlayer];
 
-        for (int i = 0; i < NoOfPlayer; i++)
-            flag[i] = true;
+            for (int i = 0; i < numOfPlayer; i++) {
+                flagTurn[i] = true;
+            }
 
-        for (int i = 0; i < NoOfPlayer; i++)
-        {
-            players[i] = String.format(ApplicationConstants.PLAYER_NAME, i+1);
-        }
+            for (int i = 0; i < numOfPlayer; i++) {
+                playersName[i] = String.format(ApplicationConstants.PLAYER_NAME, i + 1);
+            }
 
-        for (String player: players)
-        {
-            result.put(player, 0);
-        }
+            for (String player : playersName) {
+                result.put(player, 0);
+            }
 
-        while (count < NoOfPlayer)
-        {
-            if (flag[turn]) {
-                System.out.println(String.format(ApplicationConstants.DISPLAY_MESSAGE, players[turn]));
-                String input = scan.nextLine();
+            int turn = random.nextInt(numOfPlayer);
+            while (count < numOfPlayer) {
+                if (flagTurn[turn]) {
+                    System.out.println(String.format(ApplicationConstants.DISPLAY_MESSAGE, playersName[turn]));
+                    String input = scan.nextLine();
 
-                if (input.equals("r")) {
-                    int currentNumber = random.nextInt(6) + 1;
-                    System.out.println(String.format(ApplicationConstants.DICE_VALUE, currentNumber));
+                    if (input.equals("r")) {
+                        int currentNumber = random.nextInt(6) + 1;
+                        System.out.println(String.format(ApplicationConstants.DICE_VALUE, currentNumber));
 
-                    int tempResult = currentNumber + result.get(players[turn]);
+                        int tempResult = currentNumber + result.get(playersName[turn]);
 
-                    switch (currentNumber) {
-                        case 1 :
-                            diceObject.diceFaceOne(players, turn, targetNumber, flag, tempResult);
-                            turn = (turn+1) % NoOfPlayer;
-                            break;
-                        case 6 :
-                            diceObject.diceFaceSix(players, turn, targetNumber, flag, tempResult);
-                            if (tempResult > targetNumber){
-                                turn = (turn+1) % NoOfPlayer;
-                            }
-                            break;
-                        default:
-                            previous_State.remove(players[turn]);
-                            diceObject.moveDice(players, turn, targetNumber, flag, tempResult);
-                            turn = (turn+1) % NoOfPlayer;
-                            break;
+                        switch (currentNumber) {
+                            case 1:
+                                diceObject.diceFaceOne(playersName, turn, targetNumber, flagTurn, tempResult);
+                                turn = (turn + 1) % numOfPlayer;
+                                break;
+                            case 6:
+                                diceObject.diceFaceSix(playersName, turn, targetNumber, flagTurn, tempResult);
+                                if (tempResult > targetNumber) {
+                                    turn = (turn + 1) % numOfPlayer;
+                                }
+                                break;
+                            default:
+                                previous_State.remove(playersName[turn]);
+                                diceObject.countMove(playersName, turn, targetNumber, flagTurn, tempResult);
+                                turn = (turn + 1) % numOfPlayer;
+                                break;
+                        }
+                    } else {
+                        System.out.println(ApplicationConstants.INVALID_KEY);
                     }
                 } else {
-                    System.out.println(ApplicationConstants.INVALID_KEY);
+                    if (result.get(playersName[turn]) != targetNumber) {
+                        flagTurn[turn] = true;
+                    }
+                    turn = (turn + 1) % numOfPlayer;
                 }
-            } else {
-                if (result.get(players[turn]) != targetNumber) {
-                    flag[turn] = true;
-                }
-                turn = (turn+1) % NoOfPlayer;
             }
         }
     }
 
-    private void diceFaceOne(String[] players, int turn, int targetNumber, boolean[] flag, int tempResult)
+    private void diceFaceOne(String[] playersName, int turn, int targetNumber, boolean[] flagTurn, int tempResult)
     {
-        moveDice(players, turn, targetNumber, flag, tempResult);
-        if (previous_State.contains(players[turn])) {
-            previous_State.remove(players[turn]);
-            flag[turn] = false;
+        countMove(playersName, turn, targetNumber, flagTurn, tempResult);
+        if (previous_State.contains(playersName[turn])) {
+            previous_State.remove(playersName[turn]);
+            flagTurn[turn] = false;
             System.out.println(ApplicationConstants.PENALITY);
         } else {
-            previous_State.add(players[turn]);
+            previous_State.add(playersName[turn]);
         }
     }
 
-    private void diceFaceSix(String[] players, int turn, int targetNumber, boolean[] flag, int tempResult)
+    private void diceFaceSix(String[] playersName, int turn, int targetNumber, boolean[] flagTurn, int tempResult)
     {
-        previous_State.remove(players[turn]);
-        moveDice(players, turn, targetNumber, flag, tempResult);
+        previous_State.remove(playersName[turn]);
+        countMove(playersName, turn, targetNumber, flagTurn, tempResult);
         if (tempResult < targetNumber) {
-            System.out.println(String.format(ApplicationConstants.MORE_CHANCE, players[turn]) + "\n");
+            System.out.println(String.format(ApplicationConstants.MORE_CHANCE, playersName[turn]) + "\n");
         }
     }
 
-    private void moveDice(String[] players, int turn, int targetNumber, boolean[] flag, int tempResult ) {
+    private void countMove(String[] playersName, int turn, int targetNumber, boolean[] flagTurn, int tempResult )
+    {
         if (tempResult < targetNumber) {
-            result.put(players[turn], tempResult);
+            result.put(playersName[turn], tempResult);
         } else if (tempResult == targetNumber) {
-            flag[turn] = false;
-            result.put(players[turn], tempResult);
-            System.out.println(String.format(ApplicationConstants.WON_MESSAGE, players[turn], ++count));
+            flagTurn[turn] = false;
+            result.put(playersName[turn], tempResult);
+            System.out.println(String.format(ApplicationConstants.WON_MESSAGE, playersName[turn], ++count));
         }
         result = sortUtils.sortMap(result);
         displayTable(result);

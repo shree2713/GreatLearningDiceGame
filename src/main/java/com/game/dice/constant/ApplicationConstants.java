@@ -9,5 +9,5 @@ public class ApplicationConstants
     public static final String PENALITY = "Penality of One turn for two consecutive 1's";
     public static final String MORE_CHANCE = "%s got another chance to roll the Dice";
     public static final String WON_MESSAGE = "%s completed with rank : %s";
-
+    public static final String INVALID_ARGUMENTS = "The value of Command line arguments must be greater than `0`";
 }
