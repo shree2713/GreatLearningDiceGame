@@ -3,21 +3,24 @@
 ## To Run the code.
 ### Prerequites:
 Java 1.8
+
 IntelliJ IDEA ide
 
 ### Run
-Download the zip file of source code
-Extract the zip file.
+#### Download the zip file of source code
 
-Open the Intellij ide.
-Open the Project:
-  file -> open -> path to sourceCode package DiceGame -> open
+1. Extract the zip file.
+
+2. Open the Intellij ide.
+
+3. Open the Project:
+file -> open -> path to sourceCode package DiceGame -> open
   
-open Dice.java class: 
-  src -> main -> java -> com.game.dice.controller -> Dice.java
+4. open Dice.java class: 
+src -> main -> java -> com.game.dice.controller -> Dice.java
   
-To pass the Command line arguments:
-  Run -> Edit Configuration -> enter values in Program argument fields.
+5. To pass the Command line arguments:
+Run -> Edit Configuration -> enter values in Program argument fields.
   
 ## Assumption
 The Value of N (number of players) and M (points of accumulate) are passed in same order with space separation(5 50) as command line arguments.
